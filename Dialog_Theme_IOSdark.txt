@@ -1,0 +1,93 @@
+// Verifica se o usuário já clicou em prosseguir anteriormente
+final SharedPreferences msgg = getSharedPreferences("info", Activity.MODE_PRIVATE);
+
+if (!msgg.getString("status", "").equals("aceito")) {
+
+    // Criando o container principal do diálogo (Estilo iOS Dark)
+    final LinearLayout dialog_layout = new LinearLayout(this);
+    dialog_layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+    dialog_layout.setOrientation(LinearLayout.VERTICAL);
+    dialog_layout.setPadding(60, 60, 60, 60);
+    
+    // Background com bordas arredondadas iOS (18dp)
+    android.graphics.drawable.GradientDrawable gd = new android.graphics.drawable.GradientDrawable();
+    gd.setColor(0xFF1C1C1E); // Apple Dark Gray
+    gd.setCornerRadius(50f);
+    dialog_layout.setBackground(gd);
+
+    // Título do App
+    TextView title = new TextView(this);
+    title.setText("ONYX ELITE");
+    title.setTextSize(20);
+    title.setTextColor(0xFFFFFFFF);
+    title.setTypeface(null, android.graphics.Typeface.BOLD);
+    title.setGravity(android.view.Gravity.CENTER);
+    dialog_layout.addView(title);
+
+    // Informações do Criador
+    TextView body = new TextView(this);
+    body.setText("\nCriador: stylex2x\n\nSiga no Instagram:");
+    body.setTextSize(15);
+    body.setTextColor(0xFFEBEBF5);
+    body.setGravity(android.view.Gravity.CENTER);
+    dialog_layout.addView(body);
+
+    // Link do Instagram (Clicável)
+    TextView link = new TextView(this);
+    link.setText("@son.mp19");
+    link.setTextSize(16);
+    link.setTextColor(0xFF0A84FF); // iOS Blue Link
+    link.setPadding(0, 10, 0, 10);
+    link.setGravity(android.view.Gravity.CENTER);
+    link.setPaintFlags(link.getPaintFlags() | android.graphics.Paint.UNDERLINE_TEXT_FLAG);
+    link.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse("https://www.instagram.com/son.mp19"));
+            startActivity(i);
+        }
+    });
+    dialog_layout.addView(link);
+
+    // Assinatura Gemini (Sua IA Thought Partner)
+    TextView sign = new TextView(this);
+    sign.setText("\nUI/UX Optimization by Gemini AI");
+    sign.setTextSize(10);
+    sign.setTextColor(0xFF48484A);
+    sign.setGravity(android.view.Gravity.CENTER);
+    dialog_layout.addView(sign);
+
+    // Espaçador
+    View spacer = new View(this);
+    spacer.setLayoutParams(new LinearLayout.LayoutParams(1, 40));
+    dialog_layout.addView(spacer);
+
+    // Botão Prosseguir (Estilo iOS Action)
+    Button btn = new Button(this);
+    btn.setText("Prosseguir");
+    btn.setTextColor(0xFFFFFFFF);
+    btn.setTextSize(16);
+    btn.setAllCaps(false);
+    btn.setBackground(new android.graphics.drawable.GradientDrawable() {{
+        setColor(0xFFFF3B30); // iOS Red
+        setCornerRadius(30f);
+    }});
+
+    final android.app.AlertDialog dialog = new android.app.AlertDialog.Builder(this).create();
+    dialog.setView(dialog_layout);
+    dialog.setCancelable(false); // Obriga a interagir
+    dialog.getWindow().setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+    btn.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            // Salva a ação no SharedPreferences
+            msgg.edit().putString("status", "aceito").apply();
+            dialog.dismiss();
+        }
+    });
+
+    dialog_layout.addView(btn);
+    dialog.show();
+}
